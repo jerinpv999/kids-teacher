@@ -1,0 +1,123 @@
+:root {
+  --bg: #fff6dd; --panel: #ffffff; --ink: #2b2a4c; --soft: #6b6a8f;
+  --accent: #ff6b6b; --line: #ffd98a; --dim: #fffaf0;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #25233f; --panel: #33305a; --ink: #fff6dd; --soft: #c9c6ee; --line: #5a5690; --dim: #2c2a4d; }
+}
+* { box-sizing: border-box; }
+/* The whole app is one screen: nothing scrolls except the subject strip. */
+html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: 'Baloo 2', 'Comic Sans MS', system-ui, sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+#root {
+  max-width: 780px; margin: 0 auto; height: 100dvh;
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+  padding-top: calc(10px + env(safe-area-inset-top, 0px));
+}
+
+/* level picker */
+.pick { text-align: center; margin: auto 0; overflow-y: auto; }
+.title { font-size: 40px; margin: 0; font-weight: 800; }
+.sub { font-size: 22px; color: var(--soft); margin: 4px 0 20px; font-weight: 700; }
+.levelcard {
+  display: flex; align-items: center; gap: 16px; width: 100%; margin: 0 0 14px; cursor: pointer;
+  font: inherit; text-align: left; padding: 14px 20px; border-radius: 26px;
+  background: var(--panel); border: 4px solid var(--line); color: var(--ink);
+}
+.levelcard:hover, .levelcard:focus-visible { border-color: var(--accent); outline: none; }
+.lvicon { font-size: 44px; }
+.levelcard strong { display: block; font-size: 30px; }
+.levelcard small { font-size: 19px; color: var(--soft); font-weight: 700; }
+.note { font-size: 16px; color: var(--soft); }
+
+/* header */
+.top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex: 0 0 auto; }
+.lvbtn, .stars {
+  font: inherit; font-weight: 800; font-size: 20px; cursor: pointer;
+  background: var(--panel); border: 3px solid var(--line); color: var(--ink);
+  border-radius: 999px; padding: 4px 16px;
+}
+.stars { cursor: default; }
+
+/* subject tabs grouped by Montessori area.
+   On phones this is one horizontal scroller so the lesson stays on screen;
+   on wider screens the areas stack and wrap. */
+.subjects {
+  margin: 0; display: flex; gap: 16px; overflow-x: auto; flex: 0 0 auto;
+  padding-bottom: 4px; scrollbar-width: thin; -webkit-overflow-scrolling: touch;
+}
+.area { flex: 0 0 auto; margin-bottom: 0; }
+.row.tight { flex-wrap: nowrap; margin: 0; }
+.row.acts { flex: 0 0 auto; overflow-x: auto; flex-wrap: nowrap; margin: 0; padding-bottom: 2px; }
+.row.acts > .btn { flex: 0 0 auto; }
+.arealabel { font-size: 15px; font-weight: 800; color: var(--soft); text-transform: uppercase; letter-spacing: .06em; margin-left: 6px; }
+.row { display: flex; gap: 8px; margin: 10px 0; flex-wrap: wrap; }
+.row.tight { margin: 2px 0 6px; }
+
+.btn {
+  font: inherit; font-weight: 800; font-size: 20px; flex: 1; min-width: 92px; cursor: pointer;
+  background: var(--panel); border: 3px solid var(--line); color: var(--ink);
+  border-radius: 18px; padding: 8px 14px;
+}
+.btn.small { font-size: 17px; min-width: 104px; padding: 6px 10px; flex: 0 1 auto; }
+.btn:focus-visible { outline: 4px solid var(--accent); outline-offset: 2px; }
+.btn.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.good { border-color: #2f9e44; }
+.btn.bad { border-color: #e8590c; }
+.btn.good:hover { background: #2f9e44; color: #fff; }
+.btn.bad:hover { background: #e8590c; color: #fff; }
+
+/* game area — fills everything left over, never scrolls */
+.stage {
+  flex: 1 1 auto; min-height: 0; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: center; gap: 4px;
+  background: var(--panel); border: 3px solid var(--line);
+  border-radius: 28px; padding: 10px; text-align: center;
+  touch-action: pan-y;
+}
+/* the 3D canvas takes all the space the text does not need */
+.tilebox { flex: 1 1 auto; min-height: 90px; }
+.stage > .row { flex: 0 0 auto; }
+
+/* swipe position dots */
+.dots { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; flex: 0 0 auto; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.dot.on { background: var(--accent); transform: scale(1.35); }
+.prompt { font-size: 23px; font-weight: 800; margin: 4px 0; }
+.msg { font-size: 21px; min-height: 28px; font-weight: 700; }
+.big { font-size: 36px; font-weight: 800; line-height: 1.1; }
+.big.huge { font-size: 84px; }
+.word { font-size: 20px; color: var(--soft); font-weight: 700; }
+.counter { font-size: 16px; color: var(--soft); font-weight: 700; }
+.picture { font-size: 56px; line-height: 1.1; }
+.badge { display: inline-block; font-size: 21px; font-weight: 800; border-radius: 999px; padding: 2px 16px; margin: 4px 0; color: #fff; }
+.badge.good { background: #2f9e44; }
+.badge.bad { background: #e8590c; }
+
+.slots { display: flex; gap: 8px; justify-content: center; margin: 8px 0; flex-wrap: wrap; }
+.slot {
+  width: 54px; height: 54px; display: grid; place-items: center; font-size: 30px; font-weight: 800;
+  border: 3px dashed var(--line); border-radius: 14px;
+}
+.slot.f { border-style: solid; background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.sum { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 6px 0; }
+.grp { font-size: 30px; background: var(--dim); border-radius: 16px; padding: 6px 10px; max-width: 42%; line-height: 1.3; }
+.op { font-size: 34px; font-weight: 800; }
+
+canvas { display: block; touch-action: manipulation; cursor: pointer; border-radius: 20px; }
+
+@media (max-width: 420px) {
+  .prompt { font-size: 23px; }
+  .big { font-size: 34px; }
+  .btn { font-size: 18px; min-width: 80px; }
+  .btn.small { font-size: 15px; min-width: 92px; }
+}
+
+.detail { font-size: 15px; color: var(--soft); margin-top: 8px; }
+.detail code { font-size: 13px; word-break: break-word; }
